@@ -120,8 +120,9 @@ def tobs():
     # Return a list of jsonified tobs data for the previous 12 months
     return jsonify(tobs_list)
 
-# Define what to do when the user hits the URL with a specific start date or start-end range
-@app.route("/api/v1.0/<start>")
+# start route 
+@app.route('/api/v1.0/<start>', methods=['GET'])
+# Define what to do when the user specifies start date or start-end range
 @app.route("/api/v1.0/<start>/<end>")
 def cal_temp(start=None, end=None):
     # Create the session
@@ -133,18 +134,15 @@ def cal_temp(start=None, end=None):
     # Check if there is an end date then do the task accordingly
     if end == None: 
         # Query the data from start date to the most recent date
-        start_data = session.query(*sel).\
-                            filter(Measurement.date >= start).all()
+        start_data = session.query(*sel).filter(Measurement.date >= start).all()
         # Convert list of tuples into normal list
-        start_list = list(np.ravel(start_data))
+        start = list(np.ravel(start_data))
 
         # Return a list of jsonified minimum, average and maximum temperatures for a specific start date
-        return jsonify(start_list)
+        return jsonify(start)
     else:
         # Query the data from start date to the end date
-        start_end_data = session.query(*sel).\
-                            filter(Measurement.date >= start).\
-                            filter(Measurement.date <= end).all()
+        start_end_data = session.query(*sel).filter(Measurement.date >= start).filter(Measurement.date <= end).all()
         # Convert list of tuples into normal list
         start_end_list = list(np.ravel(start_end_data))
 
