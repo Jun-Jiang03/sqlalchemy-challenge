@@ -54,15 +54,15 @@ def welcome():
         f"/api/v1.0/start/end (enter as YYYY-MM-DD/YYYY-MM-DD)"
     )
 
+#precipitation route
 @app.route("/api/v1.0/precipitation")
-        #precipitation route
 
 def precipitation():
     session = Session(engine)
 
-    one_year_ealier =dt.date(2017,8,23)-dt.timedelta(days=365)
+    one_year_earlier =dt.date(2017,8,23)-dt.timedelta(days=365)
 
-    results= session.query(Measurement.date, Measurement.prcp).filter(Measurement.date >= one_year_ealier)\
+    results= session.query(Measurement.date, Measurement.prcp).filter(Measurement.date >= one_year_earlier)\
         .order_by(Measurement.date.desc()).all()
 
     session.close()
@@ -138,20 +138,23 @@ def cal_temp(start=None, end=None):
         # Convert list of tuples into normal list
         start = list(np.ravel(start_data))
 
+        # Close the session                   
+        session.close()
+
         # Return a list of jsonified minimum, average and maximum temperatures for a specific start date
         return jsonify(start)
+    
     else:
         # Query the data from start date to the end date
         start_end_data = session.query(*sel).filter(Measurement.date >= start).filter(Measurement.date <= end).all()
         # Convert list of tuples into normal list
         start_end_list = list(np.ravel(start_end_data))
 
+        # Close the session                   
+        session.close()
+
         # Return a list of jsonified minimum, average and maximum temperatures for a specific start-end date range
         return jsonify(start_end_list)
-
-    # Close the session                   
-    session.close()
-
 
 if __name__ == '__main__':
 
