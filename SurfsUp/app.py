@@ -67,7 +67,7 @@ def precipitation():
 
     session.close()
 
- # Create a dictionary from the row data and append to a list of all_prcp
+    # Create a dictionary from the row data and append to a list of all_prcp
     all_prcp = []
     for date, prcp in results:
         prcp_dict = {}
@@ -120,9 +120,8 @@ def tobs():
     # Return a list of jsonified tobs data for the previous 12 months
     return jsonify(tobs_list)
 
-# start route 
-@app.route('/api/v1.0/<start>', methods=['GET'])
 # Define what to do when the user specifies start date or start-end range
+@app.route('/api/v1.0/<start>', methods=['GET'])
 @app.route("/api/v1.0/<start>/<end>")
 def cal_temp(start=None, end=None):
     # Create the session
